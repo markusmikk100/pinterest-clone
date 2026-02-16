@@ -1,4 +1,4 @@
 # pinterest-clone
-React + TypeScript
-Java + Spring Boot
-MariaDB
+React + TypeScript <br />
+Java + Spring Boot <br />
+MariaDB <br />
