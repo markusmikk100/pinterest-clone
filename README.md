@@ -1,6 +1,4 @@
 # pinterest-clone
-React
-TypeScript
-Next.js
-Prisma
-Mariadb
+React + TypeScript
+Java + Spring Boot
+MariaDB
