@@ -1,53 +1,11 @@
 import Navbar from "@/components/ui/navbar";
 import BoardCard from "@/components/ui/BoardCard";
+import { getBoards } from "@/lib/actions/board.actions";
 
-const DUMMY_BOARDS = [
-  {
-    id: "1",
-    name: "Interior Design",
-    pinCount: 24,
-    coverImages: [
-      "https://picsum.photos/seed/1/400/600",
-      "https://picsum.photos/seed/2/400/300",
-      "https://picsum.photos/seed/3/400/500",
-    ],
-  },
-  {
-    id: "2",
-    name: "Travel Goals",
-    pinCount: 18,
-    coverImages: [
-      "https://picsum.photos/seed/8/400/650",
-      "https://picsum.photos/seed/6/400/550",
-      "https://picsum.photos/seed/9/400/450",
-    ],
-  },
-  {
-    id: "3",
-    name: "Food Inspo",
-    pinCount: 31,
-    coverImages: [
-      "https://picsum.photos/seed/5/400/400",
-      "https://picsum.photos/seed/10/400/500",
-    ],
-  },
-  {
-    id: "4",
-    name: "Fashion",
-    pinCount: 12,
-    coverImages: [
-      "https://picsum.photos/seed/4/400/700",
-    ],
-  },
-  {
-    id: "5",
-    name: "Fitness",
-    pinCount: 9,
-    coverImages: [],
-  },
-];
+export default async function BoardsPage() {
+  // Hardcoded userId for now, will come from auth later
+  const boards = await getBoards("placeholder-user-id");
 
-export default function BoardsPage() {
   return (
     <main>
       <Navbar />
@@ -60,11 +18,19 @@ export default function BoardsPage() {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {DUMMY_BOARDS.map((board) => (
-            <a key={board.id} href={`/boards/${board.id}`}>
-              <BoardCard {...board} />
-            </a>
-          ))}
+          {boards.length === 0 ? (
+            <p className="text-gray-400 col-span-full text-center mt-10">No boards yet!</p>
+          ) : (
+            boards.map((board) => (
+              <a key={board.id} href={`/boards/${board.id}`}>
+                <BoardCard
+                  name={board.name}
+                  pinCount={board._count.pins}
+                  coverImages={board.pins.map((p) => p.imageUrl)}
+                />
+              </a>
+            ))
+          )}
         </div>
       </div>
     </main>
