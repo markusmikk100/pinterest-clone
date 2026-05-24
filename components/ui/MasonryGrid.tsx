@@ -20,9 +20,10 @@ interface Pin {
 
 interface MasonryGridProps {
   pins: Pin[];
+  savedPinIds?: string[];
 }
 
-export default function MasonryGrid({ pins }: MasonryGridProps) {
+export default function MasonryGrid({ pins, savedPinIds = [] }: MasonryGridProps) {
   return (
     <Masonry
       breakpointCols={breakpoints}
@@ -32,9 +33,11 @@ export default function MasonryGrid({ pins }: MasonryGridProps) {
       {pins.map((pin) => (
         <PinCard
           key={pin.id}
+          id={pin.id}
           imageUrl={pin.imageUrl}
           title={pin.title}
           username={pin.user.name ?? "unknown"}
+          initialSaved={savedPinIds.includes(pin.id)}
         />
       ))}
     </Masonry>

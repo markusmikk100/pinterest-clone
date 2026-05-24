@@ -14,6 +14,7 @@ export default async function ProfilePage() {
     where: { email: session.user.email },
     include: {
       pins: { include: { user: true } },
+      saves: true,
       boards: {
         include: {
           _count: { select: { pins: true } },
@@ -28,6 +29,8 @@ export default async function ProfilePage() {
 
   if (!user) redirect("/login");
 
+  const savedPinIds = user.saves.map((s) => s.pinId);
+
   return (
     <main>
       <Navbar />
@@ -40,7 +43,6 @@ export default async function ProfilePage() {
           <h1 className="text-2xl font-bold">{user.name}</h1>
           <p className="text-gray-500 text-sm">{user.email}</p>
 
-          {/* Stats */}
           <div className="flex gap-6 mt-2 text-sm">
             <div className="text-center">
               <p className="font-bold">{user._count.pins}</p>
@@ -84,7 +86,7 @@ export default async function ProfilePage() {
         {user.pins.length === 0 ? (
           <p className="text-center text-gray-400 mt-10">No pins yet!</p>
         ) : (
-          <MasonryGrid pins={user.pins} />
+          <MasonryGrid pins={user.pins} savedPinIds={savedPinIds} />
         )}
       </div>
     </main>
