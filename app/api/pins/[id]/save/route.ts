@@ -6,9 +6,14 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   try {
     const { id } = await params;
     const session = await auth();
+
     if (!session?.user?.email) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const body = await req.json().catch(() => ({}));
+    const boardId = body.boardId ?? null;
+    console.log("Save pin:", id, "boardId:", boardId);
 
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
@@ -19,6 +24,8 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     const existing = await prisma.save.findUnique({
       where: { userId_pinId: { userId: user.id, pinId: id } },
     });
+
+    console.log("Existing save:", existing);
 
     if (existing) {
       await prisma.save.delete({
@@ -31,6 +38,15 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       data: { userId: user.id, pinId: id },
     });
 
+    if (boardId) {
+      console.log("Updating pin boardId to:", boardId);
+      await prisma.pin.update({
+        where: { id },
+        data: { boardId },
+      });
+    }
+
+    console.log("Saved successfully!");
     return NextResponse.json({ saved: true });
   } catch (error) {
     console.error("Save error:", error);

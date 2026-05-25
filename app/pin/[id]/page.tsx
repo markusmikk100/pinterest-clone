@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import SaveButton from "@/components/ui/SaveButton";
+import DeletePinButton from "@/components/ui/DeletePinButton";
 
 export default async function PinDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -17,11 +18,14 @@ export default async function PinDetailPage({ params }: { params: Promise<{ id: 
   if (!pin) notFound();
 
   let isSaved = false;
+  let isOwner = false;
+
   if (session?.user?.email) {
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
     });
     isSaved = pin.saves.some((s) => s.userId === user?.id);
+    isOwner = pin.userId === user?.id;
   }
 
   return (
@@ -37,9 +41,11 @@ export default async function PinDetailPage({ params }: { params: Promise<{ id: 
               <h1 className="text-2xl font-bold">{pin.title}</h1>
               <span className="text-sm text-gray-400">{pin.saves.length} saves</span>
             </div>
+
             {pin.description && (
               <p className="text-gray-600 text-sm">{pin.description}</p>
             )}
+
             <Link href={`/profile/${pin.user.id}`} className="flex items-center gap-3 mt-2">
               <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center font-bold text-gray-600">
                 {pin.user.name?.[0]?.toUpperCase()}
@@ -49,7 +55,12 @@ export default async function PinDetailPage({ params }: { params: Promise<{ id: 
                 <p className="text-xs text-gray-400">View profile</p>
               </div>
             </Link>
-            <SaveButton pinId={pin.id} initialSaved={isSaved} />
+
+            {isOwner ? (
+              <DeletePinButton pinId={pin.id} />
+            ) : (
+              <SaveButton pinId={pin.id} initialSaved={isSaved} />
+            )}
           </div>
         </div>
       </div>

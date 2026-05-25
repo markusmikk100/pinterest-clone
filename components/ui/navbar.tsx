@@ -16,13 +16,13 @@ export default function Navbar() {
 
       {/* Links */}
       <div className="flex gap-2 shrink-0">
-        <Link href="/" className="bg-black text-white px-4 py-2 rounded-full text-sm font-semibold">
-          Home
-        </Link>
         <Link href="/boards" className="hover:bg-gray-100 px-4 py-2 rounded-full text-sm font-semibold">
           Boards
         </Link>
       </div>
+          <Link href="/create" className="hover:bg-gray-100 px-4 py-2 rounded-full text-sm font-semibold">
+            Create
+          </Link>
 
       {/* Search */}
       <div className="flex-1 relative">
@@ -52,9 +52,6 @@ export default function Navbar() {
           >
             Sign out
           </button>
-          <Link href="/create" className="hover:bg-gray-100 px-4 py-2 rounded-full text-sm font-semibold">
-            Create
-          </Link>
         </div>
       ) : (
         <div className="flex gap-2 shrink-0">
