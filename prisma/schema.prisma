@@ -29,11 +29,10 @@ model Pin {
   link        String?
   createdAt   DateTime @default(now())
 
-  userId    String
-  user      User    @relation(fields: [userId], references: [id])
-  boardId   String?
-  board     Board?  @relation(fields: [boardId], references: [id])
-  saves     Save[]
+  userId   String
+  user     User       @relation(fields: [userId], references: [id])
+  saves    Save[]
+  boardPin BoardPin[]
 }
 
 model Board {
@@ -41,9 +40,20 @@ model Board {
   name      String
   createdAt DateTime @default(now())
 
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-  pins   Pin[]
+  userId   String
+  user     User       @relation(fields: [userId], references: [id])
+  boardPin BoardPin[]
+}
+
+model BoardPin {
+  id      String @id @default(cuid())
+  boardId String
+  pinId   String
+
+  board Board @relation(fields: [boardId], references: [id])
+  pin   Pin   @relation(fields: [pinId], references: [id])
+
+  @@unique([boardId, pinId])
 }
 
 model Save {

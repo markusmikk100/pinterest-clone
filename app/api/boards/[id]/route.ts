@@ -10,15 +10,26 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+    });
+    if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+
     const board = await prisma.board.findUnique({ where: { id } });
     if (!board) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    if (board.userId !== user.id) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
 
-    // Unlink pins from board before deleting
-    await prisma.pin.updateMany({
-      where: { boardId: id },
-      data: { boardId: null },
-    });
+    const body = await req.json().catch(() => ({}));
+    const pinId = typeof body.pinId === "string" ? body.pinId : null;
 
+    if (pinId) {
+      await prisma.boardPin.deleteMany({ where: { boardId: id, pinId } });
+      return NextResponse.json({ success: true });
+    }
+
+    await prisma.boardPin.deleteMany({ where: { boardId: id } });
     await prisma.board.delete({ where: { id } });
 
     return NextResponse.json({ success: true });

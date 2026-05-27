@@ -17,8 +17,11 @@ export default async function ProfilePage() {
       saves: true,
       boards: {
         include: {
-          _count: { select: { pins: true } },
-          pins: { take: 1, select: { imageUrl: true } },
+          _count: { select: { boardPin: true } },
+          boardPin: {
+            take: 1,
+            include: { pin: { select: { imageUrl: true } } },
+          },
         },
       },
       _count: {
@@ -35,7 +38,6 @@ export default async function ProfilePage() {
     <main>
       <Navbar />
       <div className="max-w-4xl mx-auto px-6 pt-10">
-        {/* Avatar & Info */}
         <div className="flex flex-col items-center text-center gap-3 mb-8">
           <div className="w-24 h-24 rounded-full bg-gray-300 flex items-center justify-center text-3xl font-bold text-gray-600">
             {user.name?.[0]?.toUpperCase()}
@@ -67,14 +69,14 @@ export default async function ProfilePage() {
               {user.boards.map((board) => (
                 <Link key={board.id} href={`/boards/${board.id}`}>
                   <div className="rounded-2xl overflow-hidden bg-gray-100 aspect-square">
-                    {board.pins[0] ? (
-                      <img src={board.pins[0].imageUrl} className="w-full h-full object-cover" />
+                    {board.boardPin[0] ? (
+                      <img src={board.boardPin[0].pin.imageUrl} className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full bg-gray-200" />
                     )}
                   </div>
                   <p className="text-sm font-semibold mt-1">{board.name}</p>
-                  <p className="text-xs text-gray-500">{board._count.pins} pins</p>
+                  <p className="text-xs text-gray-500">{board._count.boardPin} pins</p>
                 </Link>
               ))}
             </div>

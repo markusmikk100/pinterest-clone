@@ -6,19 +6,16 @@ export async function getBoards(userId: string) {
   return await prisma.board.findMany({
     where: { userId },
     include: {
-      pins: {
+      boardPin: {
         take: 3,
-        select: { imageUrl: true },
+        include: { pin: { select: { imageUrl: true } } },
       },
-      _count: { select: { pins: true } },
+      _count: { select: { boardPin: true } },
     },
   });
 }
 
-export async function createBoard(data: {
-  name: string;
-  userId: string;
-}) {
+export async function createBoard(data: { name: string; userId: string }) {
   return await prisma.board.create({ data });
 }
 
@@ -26,7 +23,10 @@ export async function getBoardById(id: string) {
   return await prisma.board.findUnique({
     where: { id },
     include: {
-      pins: { include: { user: true } },
+      boardPin: {
+        include: { pin: { include: { user: true } } },
+      },
+      user: true,
     },
   });
 }

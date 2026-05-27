@@ -22,8 +22,11 @@ export async function GET(req: Request) {
       where: { userId: user.id },
       orderBy: { createdAt: "desc" },
       include: full ? {
-        pins: { take: 3, select: { imageUrl: true } },
-        _count: { select: { pins: true } },
+        boardPin: {
+          take: 3,
+          include: { pin: { select: { imageUrl: true } } },
+        },
+        _count: { select: { boardPin: true } },
       } : undefined,
     });
 

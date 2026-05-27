@@ -21,9 +21,16 @@ interface Pin {
 interface MasonryGridProps {
   pins: Pin[];
   savedPinIds?: string[];
+  boardId?: string;
+  canManageBoard?: boolean;
 }
 
-export default function MasonryGrid({ pins, savedPinIds = [] }: MasonryGridProps) {
+export default function MasonryGrid({
+  pins,
+  savedPinIds = [],
+  boardId,
+  canManageBoard = false,
+}: MasonryGridProps) {
   return (
     <Masonry
       breakpointCols={breakpoints}
@@ -38,6 +45,8 @@ export default function MasonryGrid({ pins, savedPinIds = [] }: MasonryGridProps
           title={pin.title}
           username={pin.user.name ?? "unknown"}
           initialSaved={savedPinIds.includes(pin.id)}
+          boardId={boardId}
+          canRemoveFromBoard={canManageBoard}
         />
       ))}
     </Masonry>

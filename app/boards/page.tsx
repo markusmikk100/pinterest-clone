@@ -9,8 +9,8 @@ import { Plus, X } from "lucide-react";
 interface Board {
   id: string;
   name: string;
-  _count: { pins: number };
-  pins: { imageUrl: string }[];
+  _count: { boardPin: number };
+  boardPin: { pin: { imageUrl: string } }[];
 }
 
 export default function BoardsPage() {
@@ -34,13 +34,11 @@ export default function BoardsPage() {
   async function createBoard() {
     if (!boardName.trim()) return;
     setCreating(true);
-
     await fetch("/api/boards", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: boardName }),
     });
-
     setBoardName("");
     setShowModal(false);
     setCreating(false);
@@ -72,8 +70,8 @@ export default function BoardsPage() {
               <Link key={board.id} href={`/boards/${board.id}`}>
                 <BoardCard
                   name={board.name}
-                  pinCount={board._count.pins}
-                  coverImages={board.pins.map((p) => p.imageUrl)}
+                  pinCount={board._count.boardPin}
+                  coverImages={board.boardPin.map((bp) => bp.pin.imageUrl)}
                 />
               </Link>
             ))}
@@ -81,7 +79,6 @@ export default function BoardsPage() {
         )}
       </div>
 
-      {/* Create Board Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="bg-white rounded-2xl w-full max-w-sm p-6 shadow-xl">
