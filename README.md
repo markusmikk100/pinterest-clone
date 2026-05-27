@@ -10,6 +10,10 @@ Pinterest-like application built with the Next.js, TypeScript, Tailwind CSS and 
 npm install
 ```
 
+**Environment Variables**
+
+Copy `.env.example` to `.env`
+
 - **Generate Prisma client**
 
 ```bash
@@ -33,7 +37,3 @@ npm run dev
 ```
 
 Open http://localhost:3000 in your browser.
-
-**Environment Variables**
-
-Copy `.env.example` to `.env`
