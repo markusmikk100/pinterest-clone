@@ -8,7 +8,7 @@ export default function Navbar() {
   const { data: session } = useSession();
 
   return (
-    <nav className="sticky top-0 z-50 bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-4">
+    <nav style={{ backgroundColor: 'var(--background)' }} className="sticky top-0 z-50 border-b border-gray-200 px-4 py-3 flex items-center gap-4">
       {/* Logo */}
       <Link href="/" className="text-red-500 font-bold text-2xl shrink-0">
         Pinterest
@@ -30,7 +30,7 @@ export default function Navbar() {
         <input
           type="text"
           placeholder="Search"
-          className="w-full bg-gray-100 rounded-full pl-9 pr-4 py-2 text-sm outline-none focus:bg-gray-200 transition"
+          className="w-full rounded-full pl-9 pr-4 py-2 text-sm outline-none transition search-input"
         />
       </div>
 
@@ -48,7 +48,7 @@ export default function Navbar() {
           </Link>
           <button
             onClick={() => signOut()}
-            className="text-sm text-gray-500 hover:text-black transition"
+            className="text-sm text-gray-500 hover:text-black transition font-medium"
           >
             Sign out
           </button>

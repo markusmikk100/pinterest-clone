@@ -32,6 +32,9 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     console.log("Deleting saves...");
     await prisma.save.deleteMany({ where: { pinId: id } });
 
+    console.log("Deleting boardPins...");
+    await prisma.boardPin.deleteMany({ where: { pinId: id } });
+
     console.log("Deleting pin...");
     await prisma.pin.delete({ where: { id } });
 
